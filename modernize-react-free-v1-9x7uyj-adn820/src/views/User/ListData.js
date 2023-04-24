@@ -3,11 +3,11 @@ import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { addData, dltdata, updateData } from 'src/components/context/ContextProvider';
+import { addData, dltMAnydata, dltdata, updateData } from 'src/components/context/ContextProvider';
 import Alert from 'react-bootstrap/Alert';
 import { Button, Dropdown, Form } from 'react-bootstrap';
 import Tables from 'src/components/tables/tables';
-import { deletfunc, exporttocsvfunc, usergetfunc } from 'src/services/Apis';
+import { deletfunc, exporttocsvfunc, usergetfunc, deletmanyfunc } from 'src/services/Apis';
 import { toast } from 'react-toastify';
 import "./List.css"
 // import { useGetUserMutation } from 'src/services/AddApi';
@@ -24,12 +24,10 @@ const ListData = () => {
   const [sort, setSort] = useState("new");
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
-
-
   const { useradd, setUseradd } = useContext(addData)
   const { update, setUpdate } = useContext(updateData)
   const { deletedata, setDLtdata } = useContext(dltdata);
-
+  const { selectedItems, setSelectedItems } = useContext(dltMAnydata)
   const navigate = useNavigate();
 
   const adduser = () => {
@@ -49,7 +47,6 @@ const ListData = () => {
       console.log("error for get user data");
     }
   }
-
   // export user
   const exportuser = async () => {
     const response = await exporttocsvfunc();
@@ -78,7 +75,6 @@ const ListData = () => {
   }
 
   // delete user
-
   const deleteUser = async (id) => {
     const response = await deletfunc(id);
 
@@ -89,11 +85,23 @@ const ListData = () => {
       toast.error("error")
     }
   }
+  const deletManyUser = async () => {
+    const config = {
+      "Content-Type": "application/json",
+    }
+    console.log("Selected item", selectedItems)
+    const response = await deletmanyfunc(selectedItems, config);
+    if (response.status === 200) {
+      userGet();
+      setSelectedItems([]);
+    } else {
+      toast.error("error")
+    }
+  }
 
   useEffect(() => {
     userGet();
   }, [search, gender, status, sort, page])
-
   return (
     <>
       {
@@ -123,10 +131,10 @@ const ListData = () => {
             </div>
             <div className="add_btn">
               <Button style={{ backgroundColor: "#5d87ff", color: "white" }} onClick={adduser}> <i className="fa-solid fa-plus"></i>&nbsp; Add User</Button>
+              <Button style={{ backgroundColor: "#5d87ff", color: "white" }} className='mx-2' onClick={deletManyUser}>Delete All Users</Button>
             </div>
           </div>
           {/* export,gender,status */}
-
           <div className="filter_div mt-5 d-flex justify-content-between flex-wrap">
             <div className="export_csv">
               <Button className='export_btn' onClick={exportuser}>Export To Csv</Button>
@@ -160,21 +168,6 @@ const ListData = () => {
                 </div>
               </div>
             </div>
-
-            {/* short by value */}
-            {/* <div className="filter_newold">
-              <h5>Short By Value</h5>
-              <Dropdown className='text-center'>
-                <Dropdown.Toggle className='dropdown_btn' id="dropdown-basic">
-                  <i className="fa-solid fa-sort"></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={()=>setSort("new")}>New</Dropdown.Item>
-                  <Dropdown.Item onClick={()=>setSort("old")}>Old</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div> */}
-
             {/* filter by status */}
             <div className="filter_status">
               <div className="status">
@@ -216,6 +209,9 @@ const ListData = () => {
           page={page}
           pageCount={pageCount}
           setPage={setPage}
+          deletManyUser={deletManyUser}
+          setSelectedItems={setSelectedItems}
+          selectedItems={selectedItems}
         />
       </div>
     </>

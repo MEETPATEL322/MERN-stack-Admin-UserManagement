@@ -12,6 +12,7 @@ router.get('/List', AddController.getRegister);
 router.get('/List/:id', AddController.getsingleRegister);
 router.put('/edit/:id',upload.single("user_profile"),AddController.updateRegister);
 router.delete('/delete/:id', AddController.deleteRegister);
+router.delete('/deletemany', AddController.deleteManyRegister);
 
 router.put("/status/:id", AddController.status)
 router.get("/export",AddController.exportdata)

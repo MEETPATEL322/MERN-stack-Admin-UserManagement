@@ -1,30 +1,23 @@
 import React, { useState } from 'react';
 import "./table.css"
-import { Badge, Card, Dropdown, Row, Table } from 'react-bootstrap';
+import { Badge, Card, Dropdown, Row, Table, Button } from 'react-bootstrap';
 import { element } from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { BASE_URL } from 'src/services/helper';
-import { statuschangefunc } from 'src/services/Apis';
+import { statuschangefunc, deletmanyfunc } from 'src/services/Apis';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Paginations from '../pagination/Pagination';
 import { useEffect } from 'react';
 import { values } from 'lodash';
-
-
-const Tables = ({ userdata, deleteUser, userGet, handlePrevious, handleNext, page, pageCount, setPage }) => {
-
-  const [deletedata, setDeleteData] = useState([]);
-  const [select, setselect] = useState([]);
-
+const Tables = ({ userdata, deleteUser, setSelectedItems, selectedItems, deletManyUser, userGet, handlePrevious, handleNext, page, pageCount, setPage }) => {
+  // const [selectedItems, setSelectedItems] = useState([]);
   useEffect(() => {
     const getData = async () => {
       // const resData = fetch("http://localhost:8000/data/list?search=&gender=All&status=All")
     }
     getData();
   })
-
-
 
   const handleChange = async (id, status) => {
     const response = await statuschangefunc(id, status);
@@ -36,41 +29,30 @@ const Tables = ({ userdata, deleteUser, userGet, handlePrevious, handleNext, pag
     }
   }
 
-  const checkAll = (event) => {
-    let elem = document.getElementsByClassName('selectdata')
-    console.log(elem)
-    for (var i = 0; i < elem.length; i++) {
-      if (elem[i].type == 'checkbox')
-        elem[i].checked = true;
-    }
-  }
-  const handlechecked = (e) => {
-    e.preventDefault();
-    // const data = [];
-    // data.push(e.target.value)
-    // setcheckeddata(data)
-    const { checked, name, value } = e.target
-    console.log(`${value} is ${checked}`)
-    if (checked) {
-      setselect([...select,{[name]: value}])
-    }
-    else {
-      console.log("select", select)
-      setselect(select.filter((e) => e !== value))
-    }
-    // setcheckeddata({ ...checkeddata, [e.target.name]: [e.target.chacked, e.target.value] })
-  }
   return (
     <>
       <div className="container">
+
         <Row>
+
           <div className="col mt-0">
             <Card className='shadow'>
               <Table className='align-items-center' responsive="sm">
                 <thead>
                   <tr style={{ backgroundColor: "#5d87ff", color: "white" }}>
                     <th>
-                      <input type="checkbox" onClick={checkAll} />
+                      {/* <input type="checkbox" /> */}
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.length === userdata.length}
+                        onChange={() => {
+                          if (selectedItems.length === userdata.length) {
+                            setSelectedItems([]);
+                          } else {
+                            setSelectedItems(userdata.map((item) => item._id));
+                          }
+                        }}
+                      />
                     </th>
                     <th>ID</th>
                     <th>FullName</th>
@@ -89,9 +71,19 @@ const Tables = ({ userdata, deleteUser, userGet, handlePrevious, handleNext, pag
                         <>
                           <tr>
                             <th>
-                              <input type="checkbox" name={index} value={element._id} onClick={handlechecked} className="student selectdata" />
+                              <input
+                                type="checkbox"
+                                checked={selectedItems.includes(element._id)}
+                                onChange={() => {
+                                  if (selectedItems.includes(element._id)) {
+                                    setSelectedItems(selectedItems.filter((id) => id !== element._id));
+                                  } else {
+                                    setSelectedItems([...selectedItems, element._id]);
+                                  }
+                                }}
+                              />
                             </th>
-                            <td>{element._id}</td>
+                            <td>{index + 1}</td>
                             <td>{element.fname + element.lname}</td>
                             <td>{element.email}</td>
                             <td>{element.hobbie}</td>
@@ -141,7 +133,6 @@ const Tables = ({ userdata, deleteUser, userGet, handlePrevious, handleNext, pag
                       )
                     }) : <div className='no_data text-center'>No-data Found</div>
                   }
-
                 </tbody>
               </Table>
               <Paginations
@@ -155,7 +146,7 @@ const Tables = ({ userdata, deleteUser, userGet, handlePrevious, handleNext, pag
           </div>
         </Row>
         <ToastContainer />
-      </div>
+      </div >
     </>
   );
 }
