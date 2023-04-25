@@ -15,7 +15,7 @@ class AddController {
 
     const file = req.file.filename;
 
-    const { fname, lname, email, mobile, gender, location, jobdest, status, hobbie, country, state, city } = req.body
+    const { fname, lname, email, mobile, gender, location, jobdest, status, hobbie, country, countryisocode, stateisocode, state, city } = req.body
 
 
     if (!fname || !lname || !email || !mobile || !gender || !location || jobdest || !status || !file || !hobbie || !country || !state || !city) {
@@ -29,7 +29,7 @@ class AddController {
         res.status(401).json("This user already exist in our databse")
       } else {
         const userData = new AddModel({
-          fname, lname, email, mobile, gender, location, jobdest, status, image: file, hobbie, country, state, city
+          fname, lname, email, mobile, gender, location, jobdest, status, image: file, hobbie, country, state, city, countryisocode, stateisocode
         });
         await userData.save();
         res.status(200).json(userData);
@@ -86,12 +86,12 @@ class AddController {
 
     const { id } = req.params;
 
-    const { fname, lname, email, mobile, gender, location, status, user_profile, hobbie, country, state, city } = req.body;
+    const { fname, lname, email, mobile, gender, location, status, user_profile, hobbie, country, state, city, countryisocode, stateisocode } = req.body;
     const file = req.file ? req.file.filename : user_profile
 
     try {
       const updateuser = await AddModel.findByIdAndUpdate({ _id: id }, {
-        fname, lname, email, mobile, gender, location, status, image: file, hobbie, country, state, city
+        fname, lname, email, mobile, gender, location, status, image: file, hobbie, country, state, city, countryisocode, stateisocode
       }, {
         new: true
       });

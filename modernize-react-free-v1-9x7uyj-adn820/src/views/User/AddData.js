@@ -49,8 +49,9 @@ const AddData = () => {
   const [selectedCity, setSelectedCity] = useState(null);
 
   console.log("selected company", selectedCountry)
-  console.log("selected company", selectedState)
-  console.log("selected company", selectedCity)
+  console.log("selected state", selectedState)
+  console.log("selected city", selectedCity)
+
   // Multi Checkbox
   const getPjl = (e) => {
 
@@ -140,7 +141,6 @@ const AddData = () => {
       toast.error("location is Required !")
     } else {
       toast.success("Registartion is succesfully");
-
       const data = new FormData();
       data.append("fname", fname)
       data.append("lname", lname)
@@ -154,10 +154,11 @@ const AddData = () => {
       data.append("country", selectedCountry.name)
       data.append("state", selectedState.name)
       data.append("city", selectedCity.name)
+      data.append("countryisocode", selectedCountry.isoCode)
+      data.append("stateisocode", selectedState.isoCode)
       const config = {
         "Content-Type": "multipart/form-data"
       }
-      console.log("data123456", data);
       const response = await registerfunc(data, config);
       console.log("response", response);
       if (response.status === 200) {
@@ -168,7 +169,8 @@ const AddData = () => {
           email: "",
           mobile: "",
           gender: "",
-          location: "", country: "",
+          location: "",
+          country: "",
           state: "",
           city: ""
         });
@@ -176,7 +178,7 @@ const AddData = () => {
         setImage("")
         setUseradd(response.data)
         navigate("/List");
-        toast.success("Data Added Successfullly")
+
       } else {
         toast.error("Error!")
       }
@@ -249,7 +251,6 @@ const AddData = () => {
                     setSelectedCountry(item);
                   }}
                 />
-                {/* <Select options={options} onChange={setStatusValue} /> */}
               </Form.Group> <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
                 <Form.Label>Select Your State</Form.Label>
                 {/* <Select options={options} onChange={setStatusValue} /> */}

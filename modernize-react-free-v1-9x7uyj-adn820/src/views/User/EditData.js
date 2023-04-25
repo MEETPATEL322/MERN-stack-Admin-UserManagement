@@ -70,8 +70,8 @@ const Edit = () => {
       setStatus(response.data.status)
       setImgdata(response.data.image)
       setHobbie(response.data.hobbie)
-      setSelectedCountry({ name: response.data.country })
-      setSelectedState({ name: response.data.state })
+      setSelectedCountry({ name: response.data.country, isoCode: response.data.countryisocode })
+      setSelectedState({ name: response.data.state, isoCode: response.data.stateisocode })
       setSelectedCity({ name: response.data.city })
     } else {
       console.log("error");
@@ -215,7 +215,6 @@ const Edit = () => {
               </Form.Group>
               <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
                 <Form.Label>Select Your Status</Form.Label>
-
                 <select name="status" value={status} className={` form-select`} onChange={setStatusValue}>
                   <option value="Active">Active</option>
                   <option value="InActive">InActive</option>
@@ -258,7 +257,7 @@ const Edit = () => {
                 <Form.Label>Select Your City</Form.Label>
                 <Select
                   options={City.getCitiesOfState(
-                    selectedState?.countryCode,
+                    selectedCountry?.isoCode,
                     selectedState?.isoCode
                   )}
                   getOptionLabel={(options) => {

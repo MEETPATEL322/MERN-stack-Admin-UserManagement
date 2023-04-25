@@ -40,6 +40,13 @@ const AddSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    stateisocode: {
+        type: String,
+        required: true
+    }, countryisocode: {
+        type: String,
+        required: true
+    },
     image: {
         type: String,
         required: true
@@ -48,7 +55,6 @@ const AddSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-
 })
 
 const AddModel = mongoose.model('AddData', AddSchema)
