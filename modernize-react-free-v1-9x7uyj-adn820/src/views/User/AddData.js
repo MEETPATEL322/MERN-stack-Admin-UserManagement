@@ -6,6 +6,8 @@ import { Alert, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, R
 import { Button, Form, Row } from 'react-bootstrap';
 import Select from 'react-select';
 import "../User/Add.css"
+import { Country, State, City } from "country-state-city";
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // import { adddata } from './context/ContextProvider';
@@ -28,6 +30,9 @@ const AddData = () => {
     mobile: "",
     gender: "",
     location: "",
+    country: "",
+    state: "",
+    city: ""
   });
 
   console.log(inputdata);
@@ -37,6 +42,15 @@ const AddData = () => {
   const [preview, setPreview] = useState("");
   const [hobbie, setHobbie] = useState([])
 
+
+  //state handler for country city and state
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+
+  console.log("selected company", selectedCountry)
+  console.log("selected company", selectedState)
+  console.log("selected company", selectedCity)
   // Multi Checkbox
   const getPjl = (e) => {
 
@@ -50,7 +64,6 @@ const AddData = () => {
       setHobbie(hobbie.filter((e) => e !== value))
     }
   }
-
   //   let data = pjl
   //   data.push(e.target.value)
   //   setPjl(data)
@@ -73,7 +86,6 @@ const AddData = () => {
     // console.log(e);
     setStatus(e.value)
   }
-
   // profile set
   const setProfile = (e) => {
     setImage(e.target.files[0])
@@ -83,25 +95,17 @@ const AddData = () => {
     if (image) {
       setPreview(URL.createObjectURL(image))
     }
-
     setTimeout(() => {
       //   setShowSpin(false)
     }, 1200)
   }, [image])
-
-
   const [error, setError] = useState({
     status: false,
     msg: "",
     type: ""
   })
-
   const navigate = useNavigate();
-
   const { useradd, setUseradd } = useContext(addData)
-
-
-
   //submit userdata
   const submitUserData = async (e) => {
     e.preventDefault();
@@ -124,6 +128,12 @@ const AddData = () => {
       toast.error("Gender is Required !")
     } else if (status === "") {
       toast.error("Status is Required !")
+    } else if (selectedCountry === null) {
+      toast.error("Country is Required !")
+    } else if (selectedState === null) {
+      toast.error("State is Required !")
+    } else if (selectedCity === null) {
+      toast.error("City is Required !")
     } else if (image === "") {
       toast.error("Image is Required !")
     } else if (location === "") {
@@ -141,15 +151,15 @@ const AddData = () => {
       data.append("user_profile", image)
       data.append("location", location)
       data.append("hobbie", hobbie)
-
+      data.append("country", selectedCountry.name)
+      data.append("state", selectedState.name)
+      data.append("city", selectedCity.name)
       const config = {
         "Content-Type": "multipart/form-data"
       }
-      console.log("data", data);
-
+      console.log("data123456", data);
       const response = await registerfunc(data, config);
       console.log("response", response);
-
       if (response.status === 200) {
         setInputData({
           ...inputdata,
@@ -158,12 +168,15 @@ const AddData = () => {
           email: "",
           mobile: "",
           gender: "",
-          location: ""
+          location: "", country: "",
+          state: "",
+          city: ""
         });
         setStatus("");
         setImage("")
         setUseradd(response.data)
         navigate("/List");
+        toast.success("Data Added Successfullly")
       } else {
         toast.error("Error!")
       }
@@ -171,7 +184,6 @@ const AddData = () => {
     }
 
   }
-
   return (
     <>
       <div className="container">
@@ -220,16 +232,71 @@ const AddData = () => {
                 <Form.Label>Select Your Status</Form.Label>
                 <Select options={options} onChange={setStatusValue} />
               </Form.Group>
+
+              <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
+                <Form.Label>Select Your Country</Form.Label>
+
+                <Select
+                  options={Country.getAllCountries()}
+                  getOptionLabel={(options) => {
+                    return options["name"];
+                  }}
+                  getOptionValue={(options) => {
+                    return options["name"];
+                  }}
+                  value={selectedCountry}
+                  onChange={(item) => {
+                    setSelectedCountry(item);
+                  }}
+                />
+                {/* <Select options={options} onChange={setStatusValue} /> */}
+              </Form.Group> <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
+                <Form.Label>Select Your State</Form.Label>
+                {/* <Select options={options} onChange={setStatusValue} /> */}
+
+                <Select
+                  options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
+                  getOptionLabel={(options) => {
+                    return options["name"];
+                  }}
+                  getOptionValue={(options) => {
+                    return options["name"];
+                  }}
+                  value={selectedState}
+                  onChange={(item) => {
+                    setSelectedState(item);
+                  }}
+                />
+              </Form.Group> <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
+                <Form.Label>Select Your City</Form.Label>
+                {/* <Select options={options} onChange={setStatusValue} /> */}
+                <Select
+                  options={City.getCitiesOfState(
+                    selectedState?.countryCode,
+                    selectedState?.isoCode
+                  )}
+                  getOptionLabel={(options) => {
+                    return options["name"];
+                  }}
+                  getOptionValue={(options) => {
+                    return options["name"];
+                  }}
+                  value={selectedCity}
+                  onChange={(item) => {
+                    setSelectedCity(item);
+                  }}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
+                <Form.Label>Enter Your Location</Form.Label>
+                <Form.Control type="text" name='location' value={inputdata.location} onChange={setInputValue} placeholder='Enter Your Location' />
+              </Form.Group>
               <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
                 <Form.Label>Select Your Profile</Form.Label>
                 <div className="profile_div text-center">
                   <img src={preview ? preview : "/man.png"} alt="img" />
                 </div>
                 <Form.Control type="file" name='user_profile' style={mystyle} onChange={setProfile} placeholder='Select Your Profile' />
-              </Form.Group>
-              <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
-                <Form.Label>Enter Your Location</Form.Label>
-                <Form.Control type="text" name='location' value={inputdata.location} onChange={setInputValue} placeholder='Enter Your Location' />
               </Form.Group>
               <FormControl component='fieldset' fullWidth margin='normal'>
                 <FormLabel component='legend'>Hobbie </FormLabel>
@@ -241,11 +308,9 @@ const AddData = () => {
                   <FormControlLabel control={<Checkbox />} label="Reading" value="Reading" onChange={(e) => getPjl(e)} />
                 </FormGroup>
               </FormControl>
-
               <Button style={{ backgroundColor: "#5d87ff", color: "white" }} type="submit" onClick={submitUserData} >
                 Submit
               </Button>
-
             </Row>
           </Form>
         </Card>
@@ -256,3 +321,5 @@ const AddData = () => {
   )
 }
 export default AddData;
+
+

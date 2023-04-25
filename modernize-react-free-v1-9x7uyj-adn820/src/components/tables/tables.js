@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Paginations from '../pagination/Pagination';
 import { useEffect } from 'react';
 import { values } from 'lodash';
+import { State } from 'country-state-city';
 const Tables = ({ userdata, deleteUser, setSelectedItems, selectedItems, deletManyUser, userGet, handlePrevious, handleNext, page, pageCount, setPage }) => {
   // const [selectedItems, setSelectedItems] = useState([]);
   useEffect(() => {
@@ -55,12 +56,15 @@ const Tables = ({ userdata, deleteUser, setSelectedItems, selectedItems, deletMa
                       />
                     </th>
                     <th>ID</th>
+                    <th>Image</th>
                     <th>FullName</th>
                     <th>Email</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>City</th>
                     <th>hobbie</th>
                     <th>Gender</th>
                     <th>Status</th>
-                    <th>Image</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -84,8 +88,14 @@ const Tables = ({ userdata, deleteUser, setSelectedItems, selectedItems, deletMa
                               />
                             </th>
                             <td>{index + 1}</td>
+                            <td className='img_parent'>
+                              <img src={`${BASE_URL}/uploads/${element.image}`} alt="img" />
+                            </td>
                             <td>{element.fname + element.lname}</td>
                             <td>{element.email}</td>
+                            <td>{element.country}</td>
+                            <td>{element.state}</td>
+                            <td>{element.city}</td>
                             <td>{element.hobbie}</td>
                             <td>{element.gender == "Male" ? "M" : "F"}</td>
                             <td className='d-flex align-items-center'>
@@ -100,9 +110,6 @@ const Tables = ({ userdata, deleteUser, setSelectedItems, selectedItems, deletMa
                                   <Dropdown.Item onClick={() => handleChange(element._id, "InActive")}>InActive</Dropdown.Item>
                                 </Dropdown.Menu>
                               </Dropdown>
-                            </td>
-                            <td className='img_parent'>
-                              <img src={`${BASE_URL}/uploads/${element.image}`} alt="img" />
                             </td>
                             <td>
                               <Dropdown>

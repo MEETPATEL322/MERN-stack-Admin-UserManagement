@@ -11,10 +11,8 @@ function App() {
   const theme = baselightTheme;
   return (
     <ThemeProvider theme={theme}>
-
       <CssBaseline />
       {routing}
-
     </ThemeProvider>
   );
 }
