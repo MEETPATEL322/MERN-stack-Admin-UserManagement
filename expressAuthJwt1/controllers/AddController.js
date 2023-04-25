@@ -15,25 +15,21 @@ class AddController {
 
     const file = req.file.filename;
 
-    const { fname, lname, email, mobile, gender, location, jobdest, status, hobbie } = req.body
+    const { fname, lname, email, mobile, gender, location, jobdest, status, hobbie, country, state, city } = req.body
 
 
-    if (!fname || !lname || !email || !mobile || !gender || !location || jobdest || !status || !file || !hobbie) {
+    if (!fname || !lname || !email || !mobile || !gender || !location || jobdest || !status || !file || !hobbie || !country || !state || !city) {
 
       res.status(401).json("Alll input required..")
     }
 
     try {
       const preuser = await AddModel.findOne({ email: email });
-
-
       if (preuser) {
         res.status(401).json("This user already exist in our databse")
       } else {
-
-
         const userData = new AddModel({
-          fname, lname, email, mobile, gender, location, jobdest, status, image: file, hobbie
+          fname, lname, email, mobile, gender, location, jobdest, status, image: file, hobbie, country, state, city
         });
         await userData.save();
         res.status(200).json(userData);
@@ -57,29 +53,21 @@ class AddController {
     const query = {
       fname: { $regex: search, $options: "i" }
     }
-
     if (gender !== "All") {
       query.gender = gender
     }
-
     if (status !== "All") {
       query.status = status
     }
-
     try {
       // console.log(req.query);
-
       const skip = (page - 1) * ITEM_PER_PAGE  // 1 * 4 = 4
       const count = await AddModel.countDocuments(query);
-
       const userdata = await AddModel.find(query)
         .sort({ _id: -1 })
         .limit(ITEM_PER_PAGE)
         .skip(skip);
-
       const pageCount = Math.ceil(count / ITEM_PER_PAGE);
-
-
       res.status(200).json({
         Pagination: {
           count, pageCount
@@ -98,16 +86,15 @@ class AddController {
 
     const { id } = req.params;
 
-    const { fname, lname, email, mobile, gender, location, status, user_profile, hobbie } = req.body;
+    const { fname, lname, email, mobile, gender, location, status, user_profile, hobbie, country, state, city } = req.body;
     const file = req.file ? req.file.filename : user_profile
 
     try {
       const updateuser = await AddModel.findByIdAndUpdate({ _id: id }, {
-        fname, lname, email, mobile, gender, location, status, image: file, hobbie
+        fname, lname, email, mobile, gender, location, status, image: file, hobbie, country, state, city
       }, {
         new: true
       });
-
       await updateuser.save();
       console.log("update", updateuser);
       res.status(200).json(updateuser);
