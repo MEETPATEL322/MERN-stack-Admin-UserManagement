@@ -35,7 +35,6 @@ const ReadData = () => {
   }, [id])
   return (
     <>
-
       <div className="container">
         <Card className='card-profile shadow col-lg-12 mx-auto mt-5'>
           <Card.Body>
@@ -52,13 +51,14 @@ const ReadData = () => {
               <h5><i className="fa-solid fa-mobile"></i>&nbsp;  <span>{userprofile.mobile}</span> </h5>
               <h4><i className="fa-solid fa-person"></i>&nbsp;  <span>{userprofile.gender}</span> </h4>
               <h4><i className="fa-solid fa-location-pin location"></i>&nbsp;  <span>{userprofile.location}</span> </h4>
-              <h4>Status&nbsp;  <span>{userprofile.status}</span> </h4>
+              <h4>Country&nbsp; : <span>{userprofile.country}</span> </h4>
+              <h4>State&nbsp; : <span>{userprofile.state}</span> </h4>
+              <h4>City&nbsp; : <span>{userprofile.city}</span> </h4>
+              <h4>Status&nbsp; : <span>{userprofile.status}</span> </h4>
             </div>
           </Card.Body>
         </Card>
       </div>
-
-
     </>
   )
 }

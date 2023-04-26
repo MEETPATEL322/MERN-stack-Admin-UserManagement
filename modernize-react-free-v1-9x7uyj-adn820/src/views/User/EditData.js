@@ -59,11 +59,9 @@ const Edit = () => {
   // console.log("Input data in update2", inputdata)
 
   const { update, setUpdate } = useContext(updateData)
-
   const userProfileGet = async () => {
     const response = await singleUsergetfunc(id);
     console.log("response======>>>>>>>>>>>", response);
-
     if (response.status === 200) {
       // console.log("resp",response.data.hobbie);
       setInputData(response.data)
@@ -105,13 +103,11 @@ const Edit = () => {
     setTimeout(() => {
     }, 1200)
   }, [image]);
-
   const [error, setError] = useState({
     status: false,
     msg: "",
     type: ""
   })
-
   const navigate = useNavigate();
   //submit userdata
   const submitUserData = async (e) => {
@@ -202,14 +198,14 @@ const Edit = () => {
                   name="gender"
                   value={"Male"}
                   onChange={setInputValue}
-                  checked={inputdata.gender == "Male" ? true : false}
+                  checked={inputdata.gender === "Male" ? true : false}
                 />
                 <Form.Check
                   type={"radio"}
                   label={`Female`}
                   name="gender"
                   value={"Female"}
-                  checked={inputdata.gender == "Female" ? true : false}
+                  checked={inputdata.gender === "Female" ? true : false}
                   onChange={setInputValue}
                 />
               </Form.Group>
@@ -233,12 +229,13 @@ const Edit = () => {
                   value={selectedCountry}
                   onChange={(item) => {
                     setSelectedCountry(item);
+                    setSelectedState(null)
+                    setSelectedCity(null)
                   }}
                 />
               </Form.Group>
               <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
                 <Form.Label>Select Your State</Form.Label>
-
                 <Select
                   options={State?.getStatesOfCountry(selectedCountry?.isoCode)}
                   getOptionLabel={(options) => {
@@ -250,6 +247,7 @@ const Edit = () => {
                   value={selectedState}
                   onChange={(item) => {
                     setSelectedState(item);
+                    setSelectedCity(null)
                   }}
                 />
               </Form.Group>

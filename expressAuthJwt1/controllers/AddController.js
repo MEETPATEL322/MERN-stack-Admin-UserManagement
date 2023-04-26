@@ -7,8 +7,6 @@ import path from 'path';
 import fs from 'fs';
 import csv from 'fast-csv'
 
-
-
 class AddController {
   static addRegister = async (req, res) => {
     console.log("add data..", req.file);
