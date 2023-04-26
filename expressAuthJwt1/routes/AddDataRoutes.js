@@ -7,15 +7,16 @@ import AddModel from '../models/Add.js';
 
 import upload from '../multerconfig/storageConfig.js'
 
-router.post('/Add',upload.single("user_profile"),AddController.addRegister);
+router.post('/Add', upload.single("user_profile"), AddController.addRegister);
 router.get('/List', AddController.getRegister);
 router.get('/List/:id', AddController.getsingleRegister);
-router.put('/edit/:id',upload.single("user_profile"),AddController.updateRegister);
+router.put('/edit/:id', upload.single("user_profile"), AddController.updateRegister);
 router.delete('/delete/:id', AddController.deleteRegister);
 router.delete('/deletemany', AddController.deleteManyRegister);
 
 router.put("/status/:id", AddController.status)
-router.get("/export",AddController.exportdata)
+router.put("/status/", AddController.manystatus)
+router.get("/export", AddController.exportdata)
 
 
 

@@ -7,15 +7,12 @@ import { addData, dltMAnydata, dltdata, updateData } from 'src/components/contex
 import Alert from 'react-bootstrap/Alert';
 import { Button, Dropdown, Form } from 'react-bootstrap';
 import Tables from 'src/components/tables/tables';
-import { deletfunc, exporttocsvfunc, usergetfunc, deletmanyfunc } from 'src/services/Apis';
+import { deletfunc, exporttocsvfunc, usergetfunc, deletmanyfunc, allstatuschangefunc } from 'src/services/Apis';
 import { toast } from 'react-toastify';
 import "./List.css"
 // import { useGetUserMutation } from 'src/services/AddApi';
 
 const ListData = () => {
-
-
-
   const [userdata, setUserData] = useState([]);
 
   const [search, setSearch] = useState("");
@@ -28,6 +25,7 @@ const ListData = () => {
   const { update, setUpdate } = useContext(updateData)
   const { deletedata, setDLtdata } = useContext(dltdata);
   const { selectedItems, setSelectedItems } = useContext(dltMAnydata)
+  const [statushandle, setstatushandle] = useState({});
   const navigate = useNavigate();
 
   const adduser = () => {
@@ -47,6 +45,8 @@ const ListData = () => {
       console.log("error for get user data");
     }
   }
+
+
   // export user
   const exportuser = async () => {
     const response = await exporttocsvfunc();
@@ -99,6 +99,21 @@ const ListData = () => {
     }
   }
 
+  const updateManyUser = async (e) => {
+
+    // setstatushandle({ ...statushandle, [e.target.name]: e.target.value })
+    // e.preventDefault()
+    console.log("Selected item", selectedItems)
+    // console.log("handle item", statushandle)
+    const response = await allstatuschangefunc(selectedItems, { [e.target.name]: e.target.value });
+    if (response.status === 200) {
+      toast.success("success")
+      userGet();
+      setSelectedItems([]);
+    } else {
+      toast.error("error")
+    }
+  }
   useEffect(() => {
     userGet();
   }, [search, gender, status, sort, page])
@@ -131,13 +146,16 @@ const ListData = () => {
             </div>
             <div className="add_btn">
               <Button style={{ backgroundColor: "#5d87ff", color: "white" }} onClick={adduser}> <i className="fa-solid fa-plus"></i>&nbsp; Add User</Button>
-              <Button style={{ backgroundColor: "#5d87ff", color: "white" }} className='mx-2' onClick={deletManyUser}>Delete All Users</Button>
+              {/* <Button style={{ backgroundColor: "#5d87ff", color: "white" }} className='mx-2' onClick={deletManyUser}>Delete All Users</Button> */}
             </div>
           </div>
           {/* export,gender,status */}
           <div className="filter_div mt-5 d-flex justify-content-between flex-wrap">
             <div className="export_csv">
               <Button className='export_btn' onClick={exportuser}>Export To Csv</Button>
+              <Button style={{ color: "white" }} className='mx-2 btn-danger' onClick={deletManyUser}>Delete All Users</Button>
+              <Button style={{ color: "white" }} className='mx-2 export_btn ' name='status' value={'Active'} onClick={updateManyUser}>Active All Users</Button>
+              <Button style={{ color: "white" }} className='mx-2 btn-danger' name='status' value={'InActive'} onClick={updateManyUser}>Inactive All Users</Button>
             </div>
             <div className="filter_gender">
               <div className="filter">

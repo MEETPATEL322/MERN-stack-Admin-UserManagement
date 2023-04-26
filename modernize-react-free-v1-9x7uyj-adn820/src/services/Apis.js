@@ -27,11 +27,12 @@ export const deletfunc = async (id) => {
 export const deletmanyfunc = async (ids, header) => {
     return await commonrequest("DELETE", `${BASE_URL}/data/deletemany`, JSON.stringify({ ids }), header);
 }
-
 export const statuschangefunc = async (id, data) => {
     return await commonrequest("PUT", `${BASE_URL}/data/status/${id}`, { data })
 }
-
+export const allstatuschangefunc = async (id, data) => {
+    return await commonrequest("PUT", `${BASE_URL}/data/status/`, { id, data })
+}
 export const exporttocsvfunc = async () => {
     return await commonrequest("GET", `${BASE_URL}/data/export`, "");
 }

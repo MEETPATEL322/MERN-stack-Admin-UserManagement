@@ -7,6 +7,8 @@ import path from 'path';
 import fs from 'fs';
 import csv from 'fast-csv'
 
+
+
 class AddController {
   static addRegister = async (req, res) => {
     console.log("add data..", req.file);
@@ -143,6 +145,21 @@ class AddController {
     }
   }
 
+  static manystatus = async (req, res) => {
+    console.log("status api..");
+
+    console.log("REQUEST", req.body)
+    const id = req.body.id;
+    const data = req.body.data;
+    console.log("IIIIIIIIIIDdd", id)
+
+    try {
+      const userstatusupdate = await AddModel.updateMany({ _id: id }, data, { new: true });
+      res.status(200).json(userstatusupdate)
+    } catch (error) {
+      res.status(401).json(error)
+    }
+  }
   static exportdata = async (req, res) => {
     console.log("export api..");
 
